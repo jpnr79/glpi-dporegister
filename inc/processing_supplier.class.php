@@ -5,7 +5,7 @@
  Copyright (C) 2018 by the DPO Register Development Team.
 
  https://github.com/karhel/glpi-dporegister
- -------------------------------------------------------------------------
+    static function showForProcessing(\CommonGLPI $processing)
 
  LICENSE
 
@@ -42,6 +42,10 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginDporegisterProcessing_Supplier extends PluginDporegisterCommonProcessingActor
 {
+    public static $itemtype_1 = null;
+    public static $items_id_1 = null;
+    public static $itemtype_2 = null;
+    public static $items_id_2 = null;
     public static function init()
     {
         self::$itemtype_1 = PluginDporegisterProcessing::class;
@@ -63,7 +67,7 @@ class PluginDporegisterProcessing_Supplier extends PluginDporegisterCommonProces
      *
      * @return boolean
      */
-    public static function install(Migration $migration, $version)
+    public static function install(Migration $migration, $version): bool
     {
         global $DB;
         $table = self::getTable();
@@ -85,6 +89,7 @@ class PluginDporegisterProcessing_Supplier extends PluginDporegisterCommonProces
 
             $DB->query($query) or die("error creating $table " . $DB->error());
         }
+        return true;
     }
 
     /**
@@ -92,7 +97,7 @@ class PluginDporegisterProcessing_Supplier extends PluginDporegisterCommonProces
      *
      * @return boolean
      */
-    public static function uninstall()
+    public static function uninstall(): bool
     {
         global $DB;
         $table = self::getTable();

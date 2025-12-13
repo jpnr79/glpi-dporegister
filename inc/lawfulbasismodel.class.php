@@ -43,6 +43,7 @@ if (!defined('GLPI_ROOT')) {
 class PluginDporegisterLawfulBasisModel extends CommonDropdown
 {
     static $rightname = 'plugin_dporegister_lawfulbasismodel';
+    public static $gdprValue = null;
 
     // --------------------------------------------------------------------
     //  PLUGIN MANAGEMENT - DATABASE INITIALISATION
@@ -92,6 +93,7 @@ class PluginDporegisterLawfulBasisModel extends CommonDropdown
 
         // Check old version for migrations/upgrade
         PluginDporegisterProcessing::checkLawfulbasisField();
+        return true;
     }
 
     /**
@@ -111,6 +113,7 @@ class PluginDporegisterLawfulBasisModel extends CommonDropdown
 
         $query = "DELETE FROM `glpi_logs` WHERE `itemtype` = '" . __CLASS__ . "'";
         $DB->query($query) or die("error purge logs table");
+        return true;
     }
 
     // --------------------------------------------------------------------

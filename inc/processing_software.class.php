@@ -82,6 +82,7 @@ class PluginDporegisterProcessing_Software extends CommonDBRelation
 
             $DB->query($query) or die("error creating $table " . $DB->error());
         }
+        return true;
     }
 
     /**
@@ -142,11 +143,11 @@ class PluginDporegisterProcessing_Software extends CommonDBRelation
     /**
      * Show the tab content for the Processing Object
      * 
-     * @param   PluginDporegisterProcessing $processing
+     * @param   CommonGLPI $processing
      * 
      * @return  void
      */
-    static function showForProcessing($processing)
+    static function showForProcessing(\CommonGLPI $processing)
     {
         global $DB;
 
@@ -155,7 +156,7 @@ class PluginDporegisterProcessing_Software extends CommonDBRelation
         $processingId = $processing->fields['id'];
 
         if (!PluginDporegisterProcessing::canView()) {
-            return false;
+            return;
         }
 
         $canedit = PluginDporegisterProcessing::canUpdate();

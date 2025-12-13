@@ -65,7 +65,7 @@ class PluginDporegisterProcessing_SecurityMesure extends CommonDBRelation
     *
     * @return boolean
     */
-    public static function install(Migration $migration, $version)
+    public static function install(Migration $migration, $version): bool
     {
         global $DB;
         $table = self::getTable();
@@ -83,6 +83,7 @@ class PluginDporegisterProcessing_SecurityMesure extends CommonDBRelation
 
             $DB->query($query) or die("error creating $table " . $DB->error());
         }
+        return true;
     }
 
     /**
@@ -90,7 +91,7 @@ class PluginDporegisterProcessing_SecurityMesure extends CommonDBRelation
     *
     * @return boolean
     */
-    public static function uninstall()
+    public static function uninstall(): bool
     {
         global $DB;
         $table = self::getTable();
@@ -144,11 +145,11 @@ class PluginDporegisterProcessing_SecurityMesure extends CommonDBRelation
     /**
      * Show the tab content for the Processing Object
      * 
-     * @param   PluginDporegisterProcessing $processing
+     * @param   CommonGLPI $processing
      * 
      * @return  void
      */
-    static function showForProcessing($processing)
+    static function showForProcessing(\CommonGLPI $processing)
     {
         global $DB;
 

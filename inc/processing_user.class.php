@@ -11,7 +11,7 @@
 
  This file is part of DPO Register.
 
- DPO Register is free software; you can redistribute it and/or modify
+    static function showForProcessing(\CommonGLPI $processing)
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
@@ -42,6 +42,10 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginDporegisterProcessing_User extends PluginDporegisterCommonProcessingActor
 {
+    public static $itemtype_1 = null;
+    public static $items_id_1 = null;
+    public static $itemtype_2 = null;
+    public static $items_id_2 = null;
     public static function init()
     {
         self::$itemtype_1 = PluginDporegisterProcessing::class;
@@ -63,7 +67,7 @@ class PluginDporegisterProcessing_User extends PluginDporegisterCommonProcessing
      *
      * @return boolean
      */
-    public static function install(Migration $migration, $version)
+    public static function install(Migration $migration, $version): bool
     {
         global $DB;
         $table = self::getTable();
@@ -88,6 +92,7 @@ class PluginDporegisterProcessing_User extends PluginDporegisterCommonProcessing
 
         // Migrate Joint Controller	to multiple type (User or Supplier)
         PluginDporegisterProcessing::checkUsersFields();
+        return true;
     }
 
     /**
@@ -95,7 +100,7 @@ class PluginDporegisterProcessing_User extends PluginDporegisterCommonProcessing
      *
      * @return boolean
      */
-    public static function uninstall()
+    public static function uninstall(): bool
     {
         global $DB;
         $table = self::getTable();
@@ -148,19 +153,26 @@ class PluginDporegisterProcessing_User extends PluginDporegisterCommonProcessing
 
     protected function checkEntitiesValues()
     {
+        $entityId = $this->fields['entities_id'] ?? null;
+        if (empty($entityId)) {
+            return true;
+        }
+
         $entity = new PluginDporegisterRepresentative();
-        $entity->getFromDBByCrit(['entities_id' => $entityId]);
+        if (!$entity->getFromDBByCrit(['entities_id' => $entityId])) {
+            return true;
+        }
 
-        if(!$entity) { return true; }
-        
-        if($this->fields['type'] == PluginDporegisterCommonProcessingActor::LEGAL_REPRESENTATIVE
-            && $this->fields['users_id'] == $entity->fields['users_id_representative']) {
+        $type = $this->fields['type'] ?? null;
+        $usersId = $this->fields['users_id'] ?? null;
 
+        if ($type == PluginDporegisterCommonProcessingActor::LEGAL_REPRESENTATIVE
+            && $usersId == ($entity->fields['users_id_representative'] ?? null)) {
             return false;
+        }
 
-        } else if ($this->fields['type'] == PluginDporegisterCommonProcessingActor::DPO
-            && $this->fields['users_id'] == $entity->fields['users_id_dpo']) {
-
+        if ($type == PluginDporegisterCommonProcessingActor::DPO
+            && $usersId == ($entity->fields['users_id_dpo'] ?? null)) {
             return false;
         }
 
@@ -169,38 +181,16 @@ class PluginDporegisterProcessing_User extends PluginDporegisterCommonProcessing
 
     static function getEntitiesValues($entityId)
     {
-        global $DB;
+        if (empty($entityId)) {
+            return [];
+        }
 
-        /*
-        $iter = new DBmysqlIterator($DB);
-        $iter = $iter->execute(PluginDporegisterRepresentative::getTable(),
-            [
-                'FIELDS' => PluginDporegisterRepresentative::getTable() . ".*",
-                'INNER JOIN' => [
-                        'glpi_plugin_dporegister_processings' => [
-                            "ON" => [
-                                "glpi_plugin_dporegister_processings" => "entities_id",
-                                "glpi_plugin_dporegister_representatives" => "entities_id"
-                            ],  
-                        ],
-                        'glpi_plugin_dporegister_processings_users' => [
-                            "ON" => [
-                                "glpi_plugin_dporegister_processings" => "id",
-                                "glpi_plugin_dporegister_processings_users" => "plugin_dporegister_processings_id"
-                            ]
-                        ]
-                    ],
-                'WHERE' => "`glpi_plugin_dporegister_processings_users`.`id` = " . $this->fields['id'],
-                'LIMIT' => 1
-            ]);
+        $entity = new PluginDporegisterRepresentative();
+        if ($entity->getFromDBByCrit(['entities_id' => $entityId])) {
+            return $entity->fields;
+        }
 
-        if($iter->numrows() > 0) {     
-
-            $generator = PluginDporegisterRepresentative::getFromIter($iter);
-            foreach($generator as $d) { return $d; }
-        }*/
-
-        return $entityValue;
+        return [];
     }
 }
 

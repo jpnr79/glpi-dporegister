@@ -59,6 +59,7 @@ class PluginDporegisterProfile extends Profile
     public static function install(Migration $migration, $version)
     {
         self::initProfile();
+        return true;
     }
 
     /**
@@ -85,6 +86,7 @@ class PluginDporegisterProfile extends Profile
 
         // Remove rights in current session
         self::removeRightsFromSession();
+        return true;
     }
 
     // --------------------------------------------------------------------

@@ -96,6 +96,7 @@ class PluginDporegisterProcessing_PersonalDataCategory extends CommonDBRelation
 
             $DB->query($query) or die("error creating $table " . $DB->error());
         }
+        return true;
     }
 
     /**
@@ -290,7 +291,7 @@ class PluginDporegisterProcessing_PersonalDataCategory extends CommonDBRelation
                 echo "<td class='center'>" . $data['destination'] . "</td>";
                 echo "<td class='center'>" . $data['location'] . "</td>";
                 echo "<td class='center'>" . self::showThirdCountriesTransfert($data, false) . "</td>";
-                echo "<td class='left'>" . HTML::resume_text($data['comment'], 100) . "</td>";
+                echo "<td class='left'>" . Html::resume_text($data['comment'], 100) . "</td>";
 
                 echo "</tr>";
             }
@@ -652,6 +653,7 @@ class PluginDporegisterProcessing_PersonalDataCategory extends CommonDBRelation
 
         if ($display) {
             echo $string;
+            return $string;
         } else {
             return $string;
         }
@@ -673,6 +675,7 @@ class PluginDporegisterProcessing_PersonalDataCategory extends CommonDBRelation
 
         if ($display) {
             echo $string;
+            return $string;
         } else {
             return $string;
         }

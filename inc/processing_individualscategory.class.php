@@ -84,6 +84,7 @@ class PluginDporegisterProcessing_IndividualsCategory extends CommonDBRelation
 
             $DB->query($query) or die("error creating $table " . $DB->error());
         }
+        return true;
     }
 
     /**
@@ -145,11 +146,11 @@ class PluginDporegisterProcessing_IndividualsCategory extends CommonDBRelation
     /**
      * Show the tab content for the Processing Object
      * 
-     * @param   PluginDporegisterProcessing $processing
+     * @param   CommonGLPI $processing
      * 
      * @return  void
      */
-    static function showForProcessing($processing)
+    static function showForProcessing(\CommonGLPI $processing)
     {
         global $DB;
 

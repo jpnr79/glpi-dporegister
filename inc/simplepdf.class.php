@@ -812,7 +812,7 @@ class PluginDporegisterSimplePDF
         }
     }
 
-    protected function write2ColsRow($col1Html, $col1Params = [], $col2Html, $col2Params = [])
+    protected function write2ColsRow($col1Html, $col1Params = [], $col2Html = '', $col2Params = [])
     {
         $height = 0;
 

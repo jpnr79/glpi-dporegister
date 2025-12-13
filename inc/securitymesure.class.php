@@ -77,6 +77,7 @@ class PluginDporegisterSecurityMesure extends CommonDropdown
 
             $DB->query($query) or die("error creating $table " . $DB->error());
         }
+        return true;
     }
 
     /**
@@ -96,6 +97,7 @@ class PluginDporegisterSecurityMesure extends CommonDropdown
 
         $query = "DELETE FROM `glpi_logs` WHERE `itemtype` = '" . __CLASS__ . "'";
         $DB->query($query) or die ("error purge logs table");
+        return true;
     }
 
     // --------------------------------------------------------------------

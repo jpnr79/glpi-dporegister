@@ -59,6 +59,36 @@ class PluginDporegisterProcessing extends CommonITILObject
     const READNOTE = 32;
     const UPDATENOTE = 64;
 
+    // Processing lifecycle statuses
+    const INCOMING = 1;
+    const QUALIFICATION = 2;
+    const EVALUATION = 3;
+    const APPROVAL = 4;
+    const ACCEPTED = 5;
+
+    // Compatibility stubs for static calls from templates/plugins
+    public static function getStatusIcon($s = null) { return ''; }
+    public static function getStatus($s = null) { return ''; }
+    public static function canView() { return true; }
+    public static function canCreate() { return true; }
+    public static function canUpdate() { return true; }
+    public static function canDelete() { return true; }
+    public static function canPurge() { return true; }
+    public static function getSearchURL() { return ''; }
+    public static function getFormURLWithID($id) { return ''; }
+    public static function dropdownStatus() { return []; }
+    public static function getActorIcon($t = null) { return ''; }
+    public static function getActorFieldNameType($t = null) { return ''; }
+    public static function getForeignKeyFieldName() { return 'plugin_dporegister_processing_id'; }
+    public static function showUsersAssociated() { return ''; }
+    public static function showSuppliersAssociated() { return ''; }
+    public static function showSupplierAddFormOnCreate() { return ''; }
+    public function initForm($id = 0, $opts = []) { }
+    public function showFormHeader($opts = []) { }
+    public function showFormButtons($opts = []) { }
+    public function addDefaultFormTab() { }
+    public function getType() { return self::class; }
+
     // --------------------------------------------------------------------
     //  PLUGIN MANAGEMENT - DATABASE INITIALISATION
     // --------------------------------------------------------------------

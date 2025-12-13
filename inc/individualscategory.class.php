@@ -56,7 +56,7 @@ class PluginDporegisterIndividualsCategory extends CommonDropdown
     *
     * @return boolean
     */
-    public static function install(Migration $migration)
+    public static function install(Migration $migration, $version = null): bool
     {
         global $DB;
         $table = self::getTable();
@@ -88,7 +88,7 @@ class PluginDporegisterIndividualsCategory extends CommonDropdown
     *
     * @return boolean
     */
-    public static function uninstall()
+    public static function uninstall(): bool
     {
         global $DB;
         $table = self::getTable();
