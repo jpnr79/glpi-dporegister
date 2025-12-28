@@ -69,23 +69,22 @@ class PluginDporegisterProfile extends Profile
      */
     public static function uninstall()
     {
-        global $DB;
-  
-        // Delete rights associated with the plugin
-        $query = "DELETE
-                  FROM `glpi_profilerights`
-                  WHERE `name` LIKE 'plugin_dporegister_%'";
-
-        $DB->queryOrDie($query, $DB->error());
-
         // Remove rights in configuration
-        $profileRight = new ProfileRight();
-        foreach (self::getAllRights() as $right) {
-            $profileRight->deleteByCriteria(['name' => $right['field']]);
+        if (class_exists('ProfileRight')) {
+            $profileRight = new ProfileRight();
+            foreach (self::getAllRights() as $right) {
+                $profileRight->deleteByCriteria(['name' => $right['field']]);
+            }
         }
 
-        // Remove rights in current session
-        self::removeRightsFromSession();
+        // Remove rights in current session if session is available
+        if (isset($_SESSION) && isset($_SESSION['glpiactiveprofile']) && isset($_SESSION['glpiactiveprofile']['id'])) {
+            self::removeRightsFromSession();
+        }
+
+        if (class_exists('Toolbox')) {
+            Toolbox::logInFile('dporegister', sprintf('INFO [%s:%s] Plugin rights removed during uninstall', __FILE__, __FUNCTION__));
+        }
         return true;
     }
 

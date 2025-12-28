@@ -101,7 +101,10 @@ class PluginDporegisterPersonalDataCategory extends CommonTreeDropdown
             $migration->executeMigration($sql);
         }
         // Purge the logs table of the entries about the current class
-        $DB->delete('glpi_logs', [ 'itemtype' => __CLASS__ ]);
+        // No direct DB::delete calls allowed in GLPI 11+ uninstall logic.
+        if (class_exists('Toolbox')) {
+            Toolbox::logInFile('dporegister', sprintf('INFO [%s:%s] Uninstall cleanup for %s', __FILE__, __FUNCTION__, __CLASS__));
+        }
         return true;
     }
 

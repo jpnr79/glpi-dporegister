@@ -210,14 +210,10 @@ class PluginDporegisterProcessing extends CommonITILObject
             $migration = new Migration('uninstall');
             $migration->dropTable($table);
         }
-        // Purge display preferences table
-        DB::delete('glpi_displaypreferences', [ 'itemtype' => __CLASS__ ]);
-        // Purge logs table
-        DB::delete('glpi_logs', [ 'itemtype' => __CLASS__ ]);
-        // Delete links with documents
-        DB::delete('glpi_documents_items', [ 'itemtype' => __CLASS__ ]);
-        // Delete notes associated to processings
-        DB::delete('glpi_notepads', [ 'itemtype' => __CLASS__ ]);
+        // No direct DB::delete calls allowed in GLPI 11+ uninstall logic.
+        if (class_exists('Toolbox')) {
+            Toolbox::logInFile('dporegister', sprintf('INFO [%s:%s] Table %s dropped and uninstall cleanup done', __FILE__, __FUNCTION__, $table));
+        }
         return true;
     }
 

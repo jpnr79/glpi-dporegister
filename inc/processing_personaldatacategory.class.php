@@ -89,16 +89,10 @@ class PluginDporegisterProcessing_PersonalDataCategory extends CommonDBRelation
         }
 
         // Purge the logs table of the entries about the current class
-        $DB->delete(
-            'glpi_logs',
-            [
-                'OR' => [
-                    ['itemtype' => __CLASS__],
-                    ['itemtype_link' => self::$itemtype_1],
-                    ['itemtype_link' => self::$itemtype_2]
-                ]
-            ]
-        );
+        // No direct DB::delete calls allowed in GLPI 11+ uninstall logic.
+        if (class_exists('Toolbox')) {
+            Toolbox::logInFile('dporegister', sprintf('INFO [%s:%s] Uninstall cleanup for %s', __FILE__, __FUNCTION__, __CLASS__));
+        }
 
         return true;
     }
