@@ -90,12 +90,25 @@ function plugin_version_dporegister()
  */
 function plugin_dporegister_check_prerequisites()
 {
-   // Strict version check (could be less strict, or could allow various version)
-    if (version_compare(GLPI_VERSION, '9.4', 'lt')) {
-        Toolbox::logInFile('dporegister', sprintf(
+   // GLPI 11+ compatible version check: read from version file
+    $glpi_version = 'unknown';
+    $version_file = dirname(__DIR__, 2) . '/version';
+    if (file_exists($version_file)) {
+        $glpi_version = trim(file_get_contents($version_file));
+    }
+    if (version_compare($glpi_version, '9.4', '<')) {
+        $msg = sprintf(
             'ERROR [%s:%s] GLPI version too low: %s, user=%s',
-            __FILE__, __FUNCTION__, GLPI_VERSION, $_SESSION['glpiname'] ?? 'unknown'
-        ));
+            __FILE__, __FUNCTION__, $glpi_version, $_SESSION['glpiname'] ?? 'unknown'
+        );
+        try {
+            if (class_exists('Toolbox') && method_exists('Toolbox', 'logInFile')) {
+                @Toolbox::logInFile('dporegister', $msg);
+            } else {
+                $logfile = __DIR__ . '/dporegister_error.log';
+                file_put_contents($logfile, $msg . "\n", FILE_APPEND);
+            }
+        } catch (\Throwable $e) {}
         if (method_exists('Plugin', 'messageIncompatible')) {
             echo Plugin::messageIncompatible('core', '9.4');
         } else {
